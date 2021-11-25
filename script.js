@@ -1,5 +1,5 @@
 'use strict';
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 
 
 
@@ -13,7 +13,15 @@ class Workout {
         this.coords = coords;
        this.distance = distance;
        this.duration = duration;
+       this._setDescription();
     //   this.mapEvent.latlng;
+    }
+    _setDescription(){
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        this.description = `${this.type[0].toUppercase()}${this.type.slice(1)} on ${months[this.date.getMonth()]}
+        ${this.date.getDate()}
+        `;
     }
 }
 
@@ -136,13 +144,13 @@ form.addEventListener('submit', this._newWorkout.bind(this))
         console.log(workout);
      
      
-        this.renderWorkoutMarker(workout);
+        this._renderWorkoutMarker(workout);
 
-
+        this._renderWorkout(workout)
 
         inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value = '';
     }
-        renderWorkoutMarker(workout){
+        _renderWorkoutMarker(workout){
             L.marker(workout.coords)
             .addTo(this.#map)
             .bindPopup(L.popup({
@@ -157,6 +165,22 @@ form.addEventListener('submit', this._newWorkout.bind(this))
             .openPopup();
         };
   
+        _renderWorkout(workout){
+           const html = `
+           <li class="workout workout--${workout.type}" data-id="${workout.id}">
+          <h2 class="workout__title">Running on April 14</h2>
+           <div class="workout__details">
+           <span class="workout__icon">${workout.type === 'running' ? '🏃‍♂️': '🚴‍♀️'}</span>
+           <span class="workout__value">${workout.distance}</span>
+           <span class="workout__unit">km</span>
+         </div>
+         <div class="workout__details">
+           <span class="workout__icon">⏱</span>
+           <span class="workout__value">${workout.duration}</span>
+           <span class="workout__unit">min</span>
+         </div>
+           `;
+        }
 }
 const app = new App();
 
